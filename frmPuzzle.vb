@@ -1,3 +1,6 @@
+Imports System.IO
+Imports Puzzled.My
+
 Public Class FrmPuzzle
     Inherits System.Windows.Forms.Form
 
@@ -36,28 +39,34 @@ Public Class FrmPuzzle
     Friend WithEvents MnuPuzzle As System.Windows.Forms.MenuItem
     Friend WithEvents MnuPuzzleOriginal As System.Windows.Forms.MenuItem
     Friend WithEvents MnuHelpAbout As System.Windows.Forms.MenuItem
-    Friend WithEvents MnuPuzzleFreya As System.Windows.Forms.MenuItem
-    Friend WithEvents MnuPuzzleAlex As System.Windows.Forms.MenuItem
-    Friend WithEvents MnuPuzzleSarah As System.Windows.Forms.MenuItem
-    Friend WithEvents MnuPuzzleNicholas As System.Windows.Forms.MenuItem
     Friend WithEvents MnuPuzzleWalter As System.Windows.Forms.MenuItem
+    Friend WithEvents MnuHelpSolve As MenuItem
+    Friend WithEvents MnuFileLoad As MenuItem
+    Friend WithEvents MnuHelpInstructions As MenuItem
+    Friend WithEvents MnuPuzzleL1 As MenuItem
+    Friend WithEvents MnuPuzzleL2 As MenuItem
+    Friend WithEvents MnuPuzzleL3 As MenuItem
+    Friend WithEvents MnuPuzzleSound As MenuItem
     Friend WithEvents MnuHelp As System.Windows.Forms.MenuItem
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmPuzzle))
-        Me.Game = New System.Windows.Forms.PictureBox
+        Me.Game = New System.Windows.Forms.PictureBox()
         Me.MainMenu1 = New System.Windows.Forms.MainMenu(Me.components)
-        Me.MnuFile = New System.Windows.Forms.MenuItem
-        Me.MnuFileExit = New System.Windows.Forms.MenuItem
-        Me.MnuPuzzle = New System.Windows.Forms.MenuItem
-        Me.MnuPuzzleOriginal = New System.Windows.Forms.MenuItem
-        Me.MnuPuzzleFreya = New System.Windows.Forms.MenuItem
-        Me.MnuPuzzleAlex = New System.Windows.Forms.MenuItem
-        Me.MnuPuzzleSarah = New System.Windows.Forms.MenuItem
-        Me.MnuPuzzleNicholas = New System.Windows.Forms.MenuItem
-        Me.MnuPuzzleWalter = New System.Windows.Forms.MenuItem
-        Me.MnuHelp = New System.Windows.Forms.MenuItem
-        Me.MnuHelpAbout = New System.Windows.Forms.MenuItem
+        Me.MnuFile = New System.Windows.Forms.MenuItem()
+        Me.MnuFileLoad = New System.Windows.Forms.MenuItem()
+        Me.MnuFileExit = New System.Windows.Forms.MenuItem()
+        Me.MnuPuzzle = New System.Windows.Forms.MenuItem()
+        Me.MnuPuzzleOriginal = New System.Windows.Forms.MenuItem()
+        Me.MnuPuzzleWalter = New System.Windows.Forms.MenuItem()
+        Me.MnuPuzzleL1 = New System.Windows.Forms.MenuItem()
+        Me.MnuPuzzleL2 = New System.Windows.Forms.MenuItem()
+        Me.MnuPuzzleL3 = New System.Windows.Forms.MenuItem()
+        Me.MnuHelp = New System.Windows.Forms.MenuItem()
+        Me.MnuHelpInstructions = New System.Windows.Forms.MenuItem()
+        Me.MnuHelpSolve = New System.Windows.Forms.MenuItem()
+        Me.MnuHelpAbout = New System.Windows.Forms.MenuItem()
+        Me.MnuPuzzleSound = New System.Windows.Forms.MenuItem()
         CType(Me.Game, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -74,72 +83,87 @@ Public Class FrmPuzzle
         '
         Me.MainMenu1.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MnuFile, Me.MnuPuzzle, Me.MnuHelp})
         '
-        'mnuFile
+        'MnuFile
         '
         Me.MnuFile.Index = 0
-        Me.MnuFile.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MnuFileExit})
+        Me.MnuFile.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MnuFileLoad, Me.MnuFileExit})
         Me.MnuFile.Text = "&File"
         '
-        'mnuFileExit
+        'MnuFileLoad
         '
-        Me.MnuFileExit.Index = 0
+        Me.MnuFileLoad.Index = 0
+        Me.MnuFileLoad.Text = "&Load"
+        '
+        'MnuFileExit
+        '
+        Me.MnuFileExit.Index = 1
         Me.MnuFileExit.Text = "E&xit"
         '
-        'mnuPuzzle
+        'MnuPuzzle
         '
         Me.MnuPuzzle.Index = 1
-        Me.MnuPuzzle.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MnuPuzzleOriginal, Me.MnuPuzzleFreya, Me.MnuPuzzleAlex, Me.MnuPuzzleSarah, Me.MnuPuzzleNicholas, Me.MnuPuzzleWalter})
+        Me.MnuPuzzle.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MnuPuzzleOriginal, Me.MnuPuzzleWalter, Me.MnuPuzzleL1, Me.MnuPuzzleL2, Me.MnuPuzzleL3, Me.MnuPuzzleSound})
         Me.MnuPuzzle.Text = "&Puzzle"
         '
-        'mnuPuzzleOriginal
+        'MnuPuzzleOriginal
         '
         Me.MnuPuzzleOriginal.Index = 0
         Me.MnuPuzzleOriginal.Text = "&Original"
         '
-        'mnuPuzzleFreya
+        'MnuPuzzleWalter
         '
-        Me.MnuPuzzleFreya.Index = 1
-        Me.MnuPuzzleFreya.Text = "&Freya"
+        Me.MnuPuzzleWalter.Index = 1
+        Me.MnuPuzzleWalter.Text = "&Generate"
         '
-        'mnuPuzzleAlex
+        'MnuPuzzleL1
         '
-        Me.MnuPuzzleAlex.Index = 2
-        Me.MnuPuzzleAlex.Text = "&Alex"
+        Me.MnuPuzzleL1.Index = 2
+        Me.MnuPuzzleL1.Text = "Level 1"
         '
-        'mnuPuzzleSarah
+        'MnuPuzzleL2
         '
-        Me.MnuPuzzleSarah.Index = 3
-        Me.MnuPuzzleSarah.Text = "&Sarah"
+        Me.MnuPuzzleL2.Index = 3
+        Me.MnuPuzzleL2.Text = "Level 2"
         '
-        'mnuPuzzleNicholas
+        'MnuPuzzleL3
         '
-        Me.MnuPuzzleNicholas.Index = 4
-        Me.MnuPuzzleNicholas.Text = "&Nicholas"
+        Me.MnuPuzzleL3.Index = 4
+        Me.MnuPuzzleL3.Text = "Level 3"
         '
-        'mnuPuzzleWalter
-        '
-        Me.MnuPuzzleWalter.Index = 5
-        Me.MnuPuzzleWalter.Text = "&Walter"
-        '
-        'mnuHelp
+        'MnuHelp
         '
         Me.MnuHelp.Index = 2
-        Me.MnuHelp.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MnuHelpAbout})
+        Me.MnuHelp.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MnuHelpInstructions, Me.MnuHelpSolve, Me.MnuHelpAbout})
         Me.MnuHelp.Text = "&Help"
         '
-        'mnuHelpAbout
+        'MnuHelpInstructions
         '
-        Me.MnuHelpAbout.Index = 0
+        Me.MnuHelpInstructions.Index = 0
+        Me.MnuHelpInstructions.Text = "&Instructions"
+        '
+        'MnuHelpSolve
+        '
+        Me.MnuHelpSolve.Index = 1
+        Me.MnuHelpSolve.Text = "&Solve"
+        '
+        'MnuHelpAbout
+        '
+        Me.MnuHelpAbout.Index = 2
         Me.MnuHelpAbout.Text = "&About"
         '
-        'frmPuzzle
+        'MnuPuzzleSound
+        '
+        Me.MnuPuzzleSound.Index = 5
+        Me.MnuPuzzleSound.Text = "Sound"
+        '
+        'FrmPuzzle
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(480, 446)
         Me.Controls.Add(Me.Game)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Menu = Me.MainMenu1
-        Me.Name = "frmPuzzle"
+        Me.Name = "FrmPuzzle"
         Me.Text = "Puzzled?"
         CType(Me.Game, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -153,12 +177,12 @@ Public Class FrmPuzzle
     Const MAGN As Byte = 20 'Magnification... number of pixels per cell
     Const HSIZE As Byte = 8 'Horizontal number of cells in piece
     Const aBorderWidth As Byte = 2 'Add a Line around the Field of play
-    ReadOnly aPuzzled As New clsPuzzled
-    ReadOnly aBoard As New clsBoard
-    ReadOnly aPiece(8) As clsPiece
+    ReadOnly aGame As New ClsGame
+    ReadOnly aBoard As New ClsBoard
+    ReadOnly aPiece(8) As ClsPiece
     Shared draggingPiece As Integer
-    Shared startTime As Date
-    Const numPieces As Byte = 8
+    Shared draggingPieceZ As Integer
+    Const MAXPIECE As Byte = 8
 
     Private Sub FrmPuzzle_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Dim p As Integer
@@ -167,20 +191,21 @@ Public Class FrmPuzzle
         sz.Width = MAXHCELL * MAGN * 3 + aBorderWidth * 2
         sz.Height = MAXVCELL * MAGN * 3 + aBorderWidth * 2
         Me.ClientSize = sz
-        For p = 1 To numPieces
-            aPiece(p) = New clsPiece
+        For p = 1 To MAXPIECE
+            aPiece(p) = New ClsPiece
         Next p
-        startTime = Now()
-        aPuzzled.init(aBoard, aPiece, "original.dat")
+        aGame.StartTime = Now()
+        aGame.Init(aBoard, aPiece, "original.dat")
+        MnuPuzzleL1.Checked = True
     End Sub
 
     Private Sub Game_Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles Game.Paint
         Dim p As Integer
 
         Me.BackColor = System.Drawing.Color.Black
-        aBoard.drawIt(e.Graphics)
-        For p = 1 To numPieces
-            aPiece(p).drawIt(e.Graphics)
+        aBoard.DrawIt(e.Graphics)
+        For p = 1 To MAXPIECE
+            aPiece(p).DrawIt(e.Graphics)
         Next p
     End Sub
 
@@ -188,16 +213,15 @@ Public Class FrmPuzzle
         'Initiate dragging with mouse and check for rotate (Right button) and flip (R-Button + Shift)
         Dim Button As Integer = e.Button \ &H100000
         Dim Shift As Integer = System.Windows.Forms.Control.ModifierKeys \ &H10000
-        draggingPiece = aPuzzled.whichPiece(aPiece, e.X, e.Y)
+        draggingPiece = aGame.WhichPiece(aPiece, e.X, e.Y)
+        draggingPieceZ = aPiece(draggingPiece).GetZ()
         If draggingPiece > 0 Then
             If Shift = 0 And Button = System.Windows.Forms.Keys.RButton Then 'Right click to rotate
-                aPiece(draggingPiece).rotateL()
+                aPiece(draggingPiece).RotateL()
                 Game.Invalidate()
-            Else
-                If Shift = 1 And Button = System.Windows.Forms.Keys.RButton Then 'Shift Right button to flip
-                    aPiece(draggingPiece).flip()
-                    Game.Invalidate()
-                End If
+            ElseIf Shift = 1 And Button = System.Windows.Forms.Keys.RButton Then 'Shift Right button to flip
+                aPiece(draggingPiece).Flip()
+                Game.Invalidate()
             End If
         End If
     End Sub
@@ -212,15 +236,15 @@ Public Class FrmPuzzle
             If draggingPiece > 0 Then
                 dH = Int(e.X / MAGN) - MAXHCELL - HSIZE / 2 + 1
                 dV = Int(e.Y / MAGN) - MAXVCELL - HSIZE / 2 + 1
-                If dH <> aPiece(draggingPiece).getHPos Then
-                    If dH > (-MAXHCELL + 1 - aPiece(draggingPiece).leftExtremity) And dH < (2 * MAXHCELL + 2 - aPiece(draggingPiece).rightExtremity) Then
-                        aPiece(draggingPiece).setHPos(dH)
+                If dH <> aPiece(draggingPiece).GetHPos Then
+                    If dH > (-MAXHCELL + 1 - aPiece(draggingPiece).LeftExtremity) And dH < (2 * MAXHCELL + 2 - aPiece(draggingPiece).RightExtremity) Then
+                        aPiece(draggingPiece).SetHPos(dH)
                         Game.Invalidate()
                     End If
                 End If
-                If dV <> aPiece(draggingPiece).getVPos Then 'has moved
-                    If dV > (-MAXVCELL + 1 - aPiece(draggingPiece).topExtremity) And dV < (2 * MAXVCELL + 2 - aPiece(draggingPiece).bottomExtremity) Then
-                        aPiece(draggingPiece).setVPos(dV)
+                If dV <> aPiece(draggingPiece).GetVPos Then 'has moved
+                    If dV > (-MAXVCELL + 1 - aPiece(draggingPiece).TopExtremity) And dV < (2 * MAXVCELL + 2 - aPiece(draggingPiece).BottomExtremity) Then
+                        aPiece(draggingPiece).SetVPos(dV)
                         Game.Invalidate()
                     End If
                 End If
@@ -231,15 +255,13 @@ Public Class FrmPuzzle
     Private Sub Game_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Game.MouseUp
         Dim Button As Integer = e.Button \ &H100000
         Dim Shift As Integer = System.Windows.Forms.Control.ModifierKeys \ &H10000
-        Dim timetaken As Single
 
         If draggingPiece > 0 Then
-            If aPiece(draggingPiece).isOnBoard Then
+            If aPiece(draggingPiece).IsOnBoard Then
                 'Perhaps they're all on board
-                If aPuzzled.allOnBoard(aPiece) Then
-                    If aPuzzled.isBoardFull(aBoard, aPiece) Then
-                        timetaken = DateDiff(Microsoft.VisualBasic.DateInterval.Second, startTime, Now)
-                        MsgBox("Well done. That only took " & timetaken & " seconds.")
+                If aGame.AllOnBoard(aPiece) Then 'this prevents errors when pieces are off board
+                    If aGame.IsBoardFull(aBoard, aPiece) Then
+                        aGame.EndGame()
                     End If
                 End If
             End If
@@ -258,59 +280,26 @@ Public Class FrmPuzzle
         Const aPuzzle As String = "Original"
         Dim SoundInst As New SoundClass
         SoundInst.PlaySoundFile(aPuzzle & ".wav")
-        aPuzzled.createPieces(aPuzzle & ".dat", aPiece)
-        startTime = Now
-        Game.Invalidate()
-    End Sub
-
-    Private Sub MnuPuzzleFreya_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MnuPuzzleFreya.Click
-        Const aPuzzle As String = "Freya"
-        Dim SoundInst As New SoundClass
-        SoundInst.PlaySoundFile(aPuzzle & ".wav")
-        aPuzzled.createPieces(aPuzzle & ".dat", aPiece)
-        startTime = Now
-        Game.Invalidate()
-    End Sub
-
-    Private Sub MnuPuzzleAlex_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MnuPuzzleAlex.Click
-        Const aPuzzle As String = "Alex"
-        Dim SoundInst As New SoundClass
-        SoundInst.PlaySoundFile(aPuzzle & ".wav")
-        aPuzzled.createPieces(aPuzzle & ".dat", aPiece)
-        startTime = Now
-        Game.Invalidate()
-    End Sub
-
-    Private Sub MnuPuzzleSarah_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MnuPuzzleSarah.Click
-        Const aPuzzle As String = "Sarah"
-        Dim SoundInst As New SoundClass
-        SoundInst.PlaySoundFile(aPuzzle & ".wav")
-        aPuzzled.createPieces(aPuzzle & ".dat", aPiece)
-        startTime = Now
-        Game.Invalidate()
-    End Sub
-
-    Private Sub MnuPuzzleNicholas_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MnuPuzzleNicholas.Click
-        Const aPuzzle As String = "Nichol"
-        Dim SoundInst As New SoundClass
-        SoundInst.PlaySoundFile(aPuzzle & ".wav")
-        aPuzzled.createPieces(aPuzzle & ".dat", aPiece)
-        startTime = Now
+        aGame.PuzzleName = aPuzzle & ".dat"
+        aGame.CreatePieces(aGame.PuzzleName, aPiece)
+        aGame.StartTime = Now
         Game.Invalidate()
     End Sub
 
     Private Sub MnuPuzzleWalter_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MnuPuzzleWalter.Click
         Const aPuzzle As String = "Walter"
+
         Dim SoundInst As New SoundClass
         SoundInst.PlaySoundFile(aPuzzle & ".wav")
-        aPuzzled.generatePieces()
-        aPuzzled.createPieces(aPuzzle & ".dat", aPiece)
-        startTime = Now
+        aGame.PuzzleName = aPuzzle & ".dat"
+        aGame.GeneratePieces2()
+        aGame.CreatePieces(aGame.PuzzleName, aPiece)
+        aGame.StartTime = Now
         Game.Invalidate()
     End Sub
 
     Private Sub MnuHelpAbout_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MnuHelpAbout.Click
-        frmAbout.Show()
+        FrmAbout.Show()
     End Sub
 
     Public Class SoundClass
@@ -330,8 +319,74 @@ Public Class FrmPuzzle
         Public Sub PlaySoundFile(ByVal filename As String)
             ' Plays a sound from filename.
             'PlaySound(filename, Nothing, SND_FILENAME Or SND_ASYNC)
-            My.Computer.Audio.Play(filename)
+            If My.Settings.Sound Then
+                My.Computer.Audio.Play(filename)
+            End If
         End Sub
     End Class
 
+    Private Sub MnuHelpSolve_Click(sender As Object, e As EventArgs) Handles MnuHelpSolve.Click
+        aGame.ShowSolution(aGame.PuzzleName, aPiece)
+        Game.Invalidate()
+    End Sub
+
+    Private Sub MnuFileLoad_Click(sender As Object, e As EventArgs) Handles MnuFileLoad.Click
+        Dim fd As OpenFileDialog = New OpenFileDialog()
+        Dim aPuzzle As String
+
+        fd.Title = "Choose a puzzle"
+        'fd.InitialDirectory = "C:\"
+        fd.Filter = "Puzzle files (*.dat)|*.dat|puzzle files (*.dat)|*.dat"
+        fd.FilterIndex = 2
+        fd.RestoreDirectory = True
+
+        If fd.ShowDialog() = DialogResult.OK Then
+            aPuzzle = Path.GetFileName(fd.FileName).Replace(".dat", "")
+            Dim SoundInst As New SoundClass
+            SoundInst.PlaySoundFile(aPuzzle & ".wav")
+            aGame.PuzzleName = aPuzzle & ".dat"
+            aGame.CreatePieces(aGame.PuzzleName, aPiece)
+            aGame.StartTime = Now
+            Game.Invalidate()
+        End If
+    End Sub
+
+    Private Sub MnuHelpInstructions_Click(sender As Object, e As EventArgs) Handles MnuHelpInstructions.Click
+        Try
+            Dim AppPath As String = System.AppDomain.CurrentDomain.BaseDirectory
+            System.Diagnostics.Process.Start(AppPath + "PuzzledHelp.html")
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub MnuPuzzleL1_Click(sender As Object, e As EventArgs) Handles MnuPuzzleL1.Click
+        My.Settings.Level = 1
+        MnuPuzzleL1.Checked = True
+        MnuPuzzleL2.Checked = False
+        MnuPuzzleL3.Checked = False
+    End Sub
+
+    Private Sub MnuPuzzleL2_Click(sender As Object, e As EventArgs) Handles MnuPuzzleL2.Click
+        My.Settings.Level = 2
+        MnuPuzzleL1.Checked = False
+        MnuPuzzleL2.Checked = True
+        MnuPuzzleL3.Checked = False
+    End Sub
+
+    Private Sub MnuPuzzleL3_Click(sender As Object, e As EventArgs) Handles MnuPuzzleL3.Click
+        My.Settings.Level = 3
+        MnuPuzzleL1.Checked = False
+        MnuPuzzleL2.Checked = False
+        MnuPuzzleL3.Checked = True
+    End Sub
+
+    Private Sub MnuPuzzleSound_Click(sender As Object, e As EventArgs) Handles MnuPuzzleSound.Click
+        If My.Settings.Sound Then
+            My.Settings.Sound = False
+        Else
+            My.Settings.Sound = True
+        End If
+        MnuPuzzleSound.Checked = My.Settings.Sound
+    End Sub
 End Class

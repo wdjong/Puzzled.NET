@@ -1,17 +1,17 @@
 Option Strict Off
 Option Explicit On
 
-Friend Class clsBoard
-	'Each cell (position) on the board is occupied or not.
+Friend Class ClsBoard
+    'Each cell (position) on the board is occupied or not.
     Private Const MAXHCELL As Byte = 8 'Number of horizontal Cells
     Private Const MAXVCELL As Byte = 8 'Number of vertical Cells
     Private Const MAGN As Byte = 20 'Magnification... number of pixels per cell
     Private Const BOARDH As Byte = MAXHCELL * MAGN 'origin of place to put pieces
     Private Const BOARDV As Byte = MAXVCELL * MAGN
     Const aBorderWidth As Byte = 1
-    Private position(MAXHCELL, MAXVCELL) As Boolean 'each cell when true is occupied
+    Private ReadOnly position(MAXHCELL, MAXVCELL) As Boolean 'each cell when true is occupied
 
-    Public Sub clear()
+    Public Sub Clear()
         'Remove all pieces from the board
         Dim h As Integer
         Dim v As Integer
@@ -23,7 +23,7 @@ Friend Class clsBoard
         Next h
     End Sub
 
-    Public Sub drawIt(ByVal formGraphics As System.Drawing.Graphics)
+    Public Sub DrawIt(ByVal formGraphics As System.Drawing.Graphics)
         'Draw the board
         Dim myBrush As New System.Drawing.SolidBrush(System.Drawing.Color.Gray)
         Dim myPen As New System.Drawing.Pen(System.Drawing.Color.Blue, aBorderWidth)
@@ -40,50 +40,44 @@ Friend Class clsBoard
         myBrush.Dispose()
     End Sub
 
-    Public Function isOnBoard(ByRef h As Integer, ByRef v As Integer) As Boolean
+    Public Function IsOnBoard(ByRef h As Integer, ByRef v As Integer) As Boolean
         'Given a cell reference identify if it's on the board
-        isOnBoard = False
+        IsOnBoard = False
         If h > 0 And h < MAXHCELL + 1 Then
             If v > 0 And v < MAXVCELL + 1 Then
-                isOnBoard = True
+                IsOnBoard = True
             End If
         End If
     End Function
 
-    Public Function pixToCoordH(ByRef h As Integer) As Integer
+    Public Function PixToCoordH(ByRef h As Integer) As Integer
         'return the board co-ordinate given a h pixel
-        pixToCoordH = (h / MAGN) + 1 - MAXHCELL
+        PixToCoordH = (h / MAGN) + 1 - MAXHCELL
     End Function
 
-    Public Function pixToCoordV(ByRef v As Integer) As Integer
+    Public Function PixToCoordV(ByRef v As Integer) As Integer
         'return the board co-ordinate given a v pixel
-        pixToCoordV = (v / MAGN) + 1 - MAXVCELL
+        PixToCoordV = (v / MAGN) + 1 - MAXVCELL
     End Function
 
-    Public Function getPosition(ByRef h As Integer, ByRef v As Integer) As Boolean
+    Public Function GetPosition(ByRef h As Integer, ByRef v As Integer) As Boolean
         'is a position 'occupied'. If position(h,v) answer is yes
-        getPosition = position(h, v)
+        GetPosition = False ' the default is to return false i.e. 
+        If h > 0 And h <= MAXHCELL And v > 0 And v <= MAXVCELL Then
+            GetPosition = position(h, v)
+        End If
     End Function
 
-    Public Sub init()
-        'Initialize  board
-        'Dim h As integer ' Hori cell
-        'Dim v As integer ' Vert cell
-
-        clear()
-        'For h = 1 To MAXHCELL
-        'For v = 1 To MAXVCELL
-        'position(h, v) = False 'unoccupied
-        'Next v
-        'Next h
+    Public Sub Init()
+        Clear()
     End Sub
 
-    Public Sub resetPosition(ByRef h As Integer, ByRef v As Integer)
+    Public Sub ResetPosition(ByRef h As Integer, ByRef v As Integer)
         'clear cell position -> unoccupied
         position(h, v) = False
     End Sub
 
-    Public Sub setPosition(ByRef h As Integer, ByRef v As Integer)
+    Public Sub SetPosition(ByRef h As Integer, ByRef v As Integer)
         'indicate position on board is occupied
         position(h, v) = True
     End Sub

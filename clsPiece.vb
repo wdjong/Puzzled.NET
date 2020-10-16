@@ -1,25 +1,32 @@
 Option Strict Off
 Option Explicit On
-'Each piece can be thought of as an array of cells (squares) 
-'with some visible and some not.
-'In the case of a single visible cell that could mean the upper left cell of
-'a piece might be in position -7, -7 through to 0,0
+
 Friend Class ClsPiece
     Private Const MAXHCELL As Byte = 8
     Private Const MAXVCELL As Byte = 8
-    Private Const MAGN As Byte = 20
+    Private Const MAGN As Byte = 20 'Pixels
     Private Const HSIZE As Byte = 8 'Horizontal number of cells in piece
     Private Const VSIZE As Byte = 8 'Vertical number of cells in piece
     Private Const BOARDH As Byte = MAXHCELL * MAGN 'origin of place to put pieces 'allow for a border around board
     Private Const BOARDV As Byte = MAXVCELL * MAGN
 
     Private pID As Integer 'Piece number
-    Private ReadOnly cell(HSIZE + 1, VSIZE + 1) As Boolean 'true is visible: Allow extra to simplify code when checking adjacent cells
-    Private hPos As Integer 'Board pos 1,1 is top left
-    Private vPos As Integer 'Hori first, Vert second
+    Private ReadOnly cell(HSIZE + 1, VSIZE + 1) As Boolean 'Each piece is represented by an array of cells (squares) 'true is visible: Allow overlap to simplify code when checking adjacent cells 
+    Private bhPos As Integer 'Board horizontal position       1,1 is top left
+    Private bvPos As Integer 'Board vertical position         Hori first, Vert second
     Private rotation As Integer '0 is up, 90 is right, 180 is down, 270 is left
     Private ReadOnly aColor(8) As System.Drawing.Color 'Array of colours to use for pieces
     Private oColour As Integer 'RGB 0 is black use
+
+    Public Property Colour() As Integer
+        Get
+            Colour = oColour
+        End Get
+        Set(ByVal Value As Integer)
+            oColour = Value
+        End Set
+    End Property
+    Public Property CellCount As Integer 'ie Size: number of visible squares
 
     Public Function BottomExtremity() As Integer
         'called from centreV: Find bottomost cell
@@ -34,6 +41,7 @@ Friend Class ClsPiece
                 End If
             Next h
         Next v
+        CellCount = 0
         BottomExtremity = 0 'None found
     End Function
 
@@ -102,8 +110,8 @@ Friend Class ClsPiece
         Dim pen As New Drawing.Pen(System.Drawing.Color.Red, 1)
 
         Try
-            pieceH = BOARDH + (hPos - 1) * MAGN 'Convert upper left position to pixel pos
-            pieceV = BOARDV + (vPos - 1) * MAGN '
+            pieceH = BOARDH + (bhPos - 1) * MAGN 'Convert upper left position to pixel pos
+            pieceV = BOARDV + (bvPos - 1) * MAGN '
             For h = 1 To HSIZE 'each column of cells of the piece
                 cellH = pieceH + (h - 1) * MAGN 'find the left origin in pixels of the cell
                 For v = 1 To VSIZE 'each line of cells of the piece
@@ -127,6 +135,9 @@ Friend Class ClsPiece
                             pen.Color = System.Drawing.Color.Black
                             formGraphics.DrawLine(pen, cellH, cellV + MAGN - 1, cellH + MAGN - 1, cellV + MAGN - 1)
                         End If
+                        'Else 'For diagnostic purposes you might like to see the frame around a piece
+                        '    pen.Color = aColor(oColour)
+                        '    formGraphics.DrawRectangle(pen, cellH, cellV, MAGN, MAGN)
                     End If
                 Next v
             Next h
@@ -161,18 +172,9 @@ Friend Class ClsPiece
         GetCell = cell(h, v)
     End Function
 
-    Public Property Colour() As Integer
-        Get
-            Colour = oColour
-        End Get
-        Set(ByVal Value As Integer)
-            oColour = Value
-        End Set
-    End Property
-
     Public Function GetHPos() As Integer
         'The cells horizontal position 
-        GetHPos = hPos
+        GetHPos = bhPos
     End Function
 
     Public Function GetPID() As Integer
@@ -186,7 +188,7 @@ Friend Class ClsPiece
     End Function
 
     Public Function GetVPos() As Integer
-        GetVPos = vPos
+        GetVPos = bvPos
     End Function
 
     Public Sub Init(ByVal APID As Integer, ByVal aColour As Integer)
@@ -198,12 +200,13 @@ Friend Class ClsPiece
         oColour = aColour
         For h = 1 To HSIZE 'left to right
             For v = 1 To VSIZE 'top to bottom
-                cell(h, v) = True 'visible
+                cell(h, v) = False 'visible
             Next v
         Next h
+
         rotation = 0 'up
-        hPos = 1 'left
-        vPos = 1 'top
+        bhPos = 1 'left
+        bvPos = 1 'top
         aColor(0) = System.Drawing.Color.Transparent
         aColor(1) = System.Drawing.Color.Red
         aColor(2) = System.Drawing.Color.Orange
@@ -217,6 +220,10 @@ Friend Class ClsPiece
 
     Friend Function GetZ() As Integer
         Throw New NotImplementedException()
+    End Function
+
+    Public Function Height() As Integer
+        Height = BottomExtremity() - TopExtremity()
     End Function
 
     Public Function IsAPiece() As Boolean
@@ -234,8 +241,8 @@ Friend Class ClsPiece
 
         xOnBoard = Int(h / MAGN) - (MAXHCELL - 1) '-7 -> 0 off board then board = 1 to 8
         yOnBoard = Int(v / MAGN) - (MAXVCELL - 1)
-        xOnPiece = (xOnBoard - hPos) + 1
-        yOnPiece = (yOnBoard - vPos) + 1
+        xOnPiece = (xOnBoard - bhPos) + 1
+        yOnPiece = (yOnBoard - bvPos) + 1
         If xOnPiece < 1 Or xOnPiece > HSIZE Or yOnPiece < 1 Or yOnPiece > VSIZE Then
             IsClicked = False 'not clicked on piece
         Else 'clicked on piece but may or may not be visible bit
@@ -250,19 +257,20 @@ Friend Class ClsPiece
     End Function
 
     Public Function IsOnBoard() As Boolean
-        'Determine if the piece is on the board
+        'Determine if the piece is on the board (i.e. all the visible / set squares)
         Dim hL As Integer
         Dim vT As Integer
         Dim hR As Integer
         Dim vB As Integer
         Dim aBoard As New ClsBoard
+
         IsOnBoard = False
         hL = LeftExtremity()
         vT = TopExtremity()
         hR = RightExtremity()
         vB = BottomExtremity()
-        If aBoard.IsOnBoard(hPos - 1 + hL, vPos - 1 + vT) Then
-            If aBoard.IsOnBoard(hPos - 1 + hR, vPos - 1 + vB) Then
+        If aBoard.IsOnBoard(bhPos - 1 + hL, bvPos - 1 + vT) Then
+            If aBoard.IsOnBoard(bhPos - 1 + hR, bvPos - 1 + vB) Then
                 IsOnBoard = True
             End If
         End If
@@ -285,6 +293,16 @@ Friend Class ClsPiece
         LeftExtremity = 0 'Empty
     End Function
 
+    Public Function LeftStart() As Integer
+        'When solving, Left start is the furthest possible left that the quadrangle enclosing visible parts could be and still be on the board
+        LeftStart = 2 - LeftExtremity()
+    End Function
+
+    Public Function LeftEnd() As Integer
+        'When solving, Left end is the furthest possible right that the quadrangle enclosing visible parts could be and still be on the board
+        LeftEnd = 1 + MAXHCELL - RightExtremity()
+    End Function
+
     Public Function RightExtremity() As Integer
         Dim h As Integer
         Dim v As Integer
@@ -303,6 +321,7 @@ Friend Class ClsPiece
     Public Sub ResetCell(ByRef h As Integer, ByRef v As Integer)
         'make this cell invisible
         cell(h, v) = False
+        CellCount -= 1
     End Sub
 
     Public Sub RotateL()
@@ -325,10 +344,11 @@ Friend Class ClsPiece
 
     Public Sub SetCell(ByRef h As Integer, ByRef v As Integer)
         cell(h, v) = True
+        CellCount += 1
     End Sub
 
     Public Sub SetHPos(ByRef h As Integer)
-        hPos = h
+        bhPos = h
     End Sub
 
     Public Sub SetPID(ByRef p As Integer)
@@ -340,7 +360,7 @@ Friend Class ClsPiece
     End Sub
 
     Public Sub SetVPos(ByRef v As Integer)
-        vPos = v
+        bvPos = v
     End Sub
 
     Private Sub ShiftDown(ByRef vD As Integer)
@@ -419,4 +439,19 @@ Friend Class ClsPiece
         Next v
         TopExtremity = 0 'Empty
     End Function
+
+    Public Function TopStart() As Integer
+        'When solving, Left top is the furthest possible up that the quadrangle enclosing visible parts could be and still be on the board
+        TopStart = 2 - TopExtremity()
+    End Function
+
+    Public Function TopEnd() As Integer
+        'When solving, Top end is the furthest possible down that the quadrangle enclosing visible parts could be and still be on the board
+        TopEnd = 1 + MAXVCELL - BottomExtremity()
+    End Function
+
+    Public Function Width() As Integer
+        Width = RightExtremity() - LeftExtremity()
+    End Function
+
 End Class

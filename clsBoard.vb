@@ -1,5 +1,6 @@
 Option Strict Off
 Option Explicit On
+Imports System.Runtime.CompilerServices
 
 Friend Class ClsBoard
     'Each cell (position) on the board is occupied or not.
@@ -11,6 +12,8 @@ Friend Class ClsBoard
     Const aBorderWidth As Byte = 1
     Private ReadOnly position(MAXHCELL, MAXVCELL) As Boolean 'each cell when true is occupied
 
+    Public Property OccupiedCount As Integer
+
     Public Sub Clear()
         'Remove all pieces from the board
         Dim h As Integer
@@ -21,6 +24,24 @@ Friend Class ClsBoard
                 position(h, v) = False
             Next v
         Next h
+        OccupiedCount = 0
+    End Sub
+
+    Public Sub Copy(bBoard As ClsBoard)
+        'Deep copy
+        Dim v As Integer
+        Dim h As Integer
+
+        For v = 1 To MAXVCELL
+            For h = 1 To MAXHCELL
+                If position(h, v) Then
+                    bBoard.SetPosition(h, v)
+                Else
+                    bBoard.ResetPosition(h, v)
+                End If
+            Next h
+        Next v
+
     End Sub
 
     Public Sub DrawIt(ByVal formGraphics As System.Drawing.Graphics)
@@ -74,11 +95,17 @@ Friend Class ClsBoard
 
     Public Sub ResetPosition(ByRef h As Integer, ByRef v As Integer)
         'clear cell position -> unoccupied
-        position(h, v) = False
+        If h > 0 And h <= MAXHCELL And v > 0 And v <= MAXVCELL Then
+            position(h, v) = False
+            OccupiedCount -= 1
+        End If
     End Sub
 
     Public Sub SetPosition(ByRef h As Integer, ByRef v As Integer)
         'indicate position on board is occupied
-        position(h, v) = True
+        If h > 0 And h <= MAXHCELL And v > 0 And v <= MAXVCELL Then
+            position(h, v) = True
+            OccupiedCount += 1
+        End If
     End Sub
 End Class
